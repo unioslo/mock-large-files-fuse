@@ -203,30 +203,11 @@ static int do_write(const char *path, const char *buf, size_t size, off_t offset
 
 static void * do_init(struct fuse_conn_info * conn, struct fuse_config * cfg) {
 	DECL_CMD_LINE();
-	if(p_cmd_line->filename == NULL) {
-		fprintf(stderr, "Missing or invalid file name (`--filename`)\n");
-		FUSE_EXIT();
-		return NULL;
-	}
-#ifdef FIXED_SIZE
-	if(p_cmd_line->size == 0) { /// Yes, we don't support files with zero size (to make parsing of command line simpler since `-1` is equivalent to the "last" value of a `uint64_t`; for zero-size files you can ostensibly use the regular file system
-		fprintf(stderr, "Missing or invalid file size (`--size`)\n");
-		FUSE_EXIT();
-		return NULL;
-	}
-#else
-	/// Zero file size implied
-#endif
 	if(p_cmd_line->max_read > 0) {
 		conn->max_read = p_cmd_line->max_read;
 	}
 	conn->max_readahead = conn->max_read;
 	cfg->direct_io = 1;
-#ifdef DEBUG
-	fprintf(stderr, "File name: %s\n", p_cmd_line->filename);
-	fprintf(stderr, "Size: %lld byte(s)\n", p_cmd_line->size);
-	fprintf(stderr, "Max read size: %u byte(s) vs %u bytes\n", p_cmd_line->max_read, conn->max_read);
-#endif
 	return p_cmd_line;
 }
 
@@ -268,5 +249,22 @@ int main(int argc, char *argv[]) {
 		perror("Cannot parse the command line");
 		return -1;
 	}
+	if(switches.filename == NULL) {
+		fprintf(stderr, "Missing or invalid file name (`--filename`)\n");
+		return -2;
+	}
+#ifdef FIXED_SIZE
+	if(switches.size == 0) { /// Yes, we don't support files with zero size (to make parsing of command line simpler since `-1` is equivalent to the "last" value of a `uint64_t`; for zero-size files you can ostensibly use the regular file system
+		fprintf(stderr, "Missing or invalid file size (`--size`)\n");
+		return -3;
+	}
+#else
+	/// Zero file size implied
+#endif
+#ifdef DEBUG
+	fprintf(stderr, "File name: %s\n", p_cmd_line->filename);
+	fprintf(stderr, "Size: %lld byte(s)\n", p_cmd_line->size);
+	fprintf(stderr, "Max read size: %u byte(s) vs %u bytes\n", p_cmd_line->max_read, conn->max_read);
+#endif
 	return fuse_main(args.argc, args.argv, &operations, &switches);
 }
