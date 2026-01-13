@@ -47,7 +47,7 @@ echo 'Hello world' > /mnt/mock-large-files-fuse/data
 The below variant, however, will succeed:
 
 ```console
-head -c 100 /mnt/mock-large-files-fuse > /mnt/mock-large-files-fuse
+head -c 100 /mnt/mock-large-files-fuse/data > /mnt/mock-large-files-fuse/data
 ```
 
 ## Performance
