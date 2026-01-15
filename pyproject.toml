@@ -1,0 +1,9 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools", "setuptools_scm", "wheel" ]
+
+[project]
+dynamic = [ "version" ]
+name = "mock-large-files-fuse"
+
+[tool.setuptools_scm]

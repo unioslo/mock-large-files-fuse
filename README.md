@@ -50,6 +50,22 @@ The below variant, however, will succeed:
 head -c 100 /mnt/mock-large-files-fuse/data > /mnt/mock-large-files-fuse/data
 ```
 
+### Installing with Python
+
+Although this is a [relatively simple] C application project through and through -- which naturally does not require Python -- because I am planning to at least offer an equivalent written in Python, I thought that presence on [PyPi](http://pypi.org) as a package would help with distribution of the software. Building the "wheel" implies and therefore poses the same requirements as for building the program (a C compiler and linker and Make). So does installing the program using PyPi, normally. Installation can be done conventionally:
+
+1. From PyPi:
+
+```console
+pip install mock-large-files-fuse
+```
+
+2. From a Github repository:
+
+```console
+pip install git+ssh@git@github.example.com:owner/mock-large-files-fuse.git
+```
+
 ## Performance
 
 Clocked 3-4GiB/s reading from a 10TB-sized file on Linux 5.14 (`5.14.0-611.16.1.el9_7.x86_64`; `SMP`; `PREEMPT`) on Intel Core i7-6700. Disclaimer: yes, I am well aware this is nowhere near providing enough detail to make this a true benchmark report, but frankly I have no idea which parts of the machinery are a factor here -- between the power policy configured for the kernel, the Linux distribution (RHEL 9), and the version of `libfuse`, not to mention a plethora of other perfectly valid candidates. I just want to give you a taste of the _order_ of the performance, that is all.
