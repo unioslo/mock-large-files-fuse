@@ -18,19 +18,19 @@ Build the program as per convention, using e.g. [GNU Make](http://www.gnu.org/so
 make
 ```
 
-This will produce `./fs`.
+This will produce `./mock-large-files-fuse`.
 
 ### Mounting the file system
 
-Mount the filesystem, as per convention, using `./fs` and a _mountpoint_ of your choice (a path to an existing directory):
+Mount the filesystem, as per convention, using `./mock-large-files-fuse` and a _mountpoint_ of your choice (a path to an existing directory):
 
 ```console
-./fs /mnt/mock-large-files-fuse --filename data
+./mock-large-files-fuse /mnt/mock-large-files-fuse --filename data
 ```
 
 ### Reading
 
-The file system will "shadow" the path and make available a file named `data` directly at the mountpoint directory. The file by default is empty -- provide `--size` to `./fs` command line like above, with a value, to have an effectively _readable_ file instead. Here's reading the first 100 bytes (or however many available in the file, if there's fewer) in the series and printing them in hexadecimal format:
+The file system will "shadow" the path and make available a file named `data` directly at the mountpoint directory. The file by default is empty -- provide `--size` to `./mock-large-files-fuse` command line like above, with a value, to have an effectively _readable_ file instead. Here's reading the first 100 bytes (or however many available in the file, if there's fewer) in the series and printing them in hexadecimal format:
 
 ```console
 xxd -l 100 /mnt/mock-large-files-fuse/data
