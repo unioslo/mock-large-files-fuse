@@ -1,0 +1,72 @@
+name: Release / Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build the package(s)
+    outputs:
+      dist-artifact-id: ${{ steps.upload-dist-artifact.outputs.artifact-id }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the source code repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          pip-install: build
+      - name: Install external build pre-requisite(s)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse3-dev
+      - name: Build the package
+        run: |
+          python -m build
+      - name: Save the package as a [Github] artefact
+        id: upload-dist-artifact
+        uses: actions/upload-artifact@v6
+        with:
+          path: dist/
+  release:
+    name: Release the package on Github
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download the artefact
+        uses: actions/download-artifact@v7
+        with:
+          artifact-ids: ${{ needs.build.outputs.dist-artifact-id }}
+          path: dist/
+      - name: Release the artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**
+          generate_release_notes: true
+  pypi-publish:
+    name: Publish the package on PyPi
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: pypi
+      url: https://pypi.org/p/${{ github.event.repository.name }}
+    steps:
+      - name: Download the artefact
+        uses: actions/download-artifact@v7
+        with:
+          artifact-ids: ${{ needs.build.outputs.dist-artifact-id }}
+          path: dist/
+      - name: Publish the artefact
+        uses: pypa/gh-action-pypi-publish@release/v1
