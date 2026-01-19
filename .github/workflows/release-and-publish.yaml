@@ -23,6 +23,7 @@ jobs:
         with:
           output-dir: dist/
         env:
+          CIBW_BUILD: '*-manylinux_*'
           CIBW_BEFORE_ALL_LINUX: |
             yum install -y fuse3-devel
       - name: Save the package as a [Github] artefact
