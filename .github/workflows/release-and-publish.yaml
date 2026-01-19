@@ -18,18 +18,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Build the wheel(s)
+        uses: pypa/cibuildwheel@v3.0
         with:
-          python-version: '3.12'
-          pip-install: build
-      - name: Install external build pre-requisite(s)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libfuse3-dev
-      - name: Build the package
-        run: |
-          python -m build
+          output-dir: dist/
+        env:
+          CIBW_BEFORE_ALL_LINUX: |
+            yum install -y fuse3-devel
       - name: Save the package as a [Github] artefact
         id: upload-dist-artifact
         uses: actions/upload-artifact@v6
