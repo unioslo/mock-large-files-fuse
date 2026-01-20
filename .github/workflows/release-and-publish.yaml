@@ -23,9 +23,8 @@ jobs:
         with:
           output-dir: dist/
         env:
-          CIBW_BUILD: '*-manylinux_*'
           CIBW_BEFORE_ALL_LINUX: |
-            yum install -y fuse3-devel
+            yum install -y fuse3-devel || apk add fuse3-dev
       - name: Save the package as a [Github] artefact
         id: upload-dist-artifact
         uses: actions/upload-artifact@v6
