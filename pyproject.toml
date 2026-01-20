@@ -3,7 +3,22 @@ build-backend = "setuptools.build_meta"
 requires = [ "setuptools", "setuptools_scm", "wheel" ]
 
 [project]
+authors = [
+	{ name = "Armen Michaeli", email = "armen@armen.michaeli.name" }
+]
+classifiers =   [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+	"Environment :: No Input/Output (Daemon)",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C",
+	"Topic :: System :: Filesystems",
+
+]
+description = "A filesystem-in-userspace (FUSE) offering reading/writing of arbitrarily large files"
 dynamic = [ "version" ]
 name = "mock-large-files-fuse"
+readme = "README.md"
 
 [tool.setuptools_scm]
